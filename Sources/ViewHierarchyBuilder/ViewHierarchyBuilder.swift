@@ -5,20 +5,25 @@
 //  Created by JH on 2023/7/12.
 //
 
-#if os(macOS) && !targetEnvironment(macCatalyst)
+#if canImport(AppKit) && !targetEnvironment(macCatalyst)
 import AppKit
 
 public typealias CocoaView = NSView
 public typealias CocoaViewController = NSViewController
 public typealias CocoaLayoutGuide = NSLayoutGuide
-#elseif os(iOS)
+#elseif canImport(UIKit) && !os(watchOS)
 import UIKit
 
 public typealias CocoaView = UIView
 public typealias CocoaViewController = UIViewController
 public typealias CocoaLayoutGuide = UILayoutGuide
+#else
+
+#error("Unsupported platform")
+
 #endif
 
+#if !os(watchOS)
 public protocol ViewHierarchyComponent {
     func attach(to view: CocoaView)
 }
@@ -189,3 +194,4 @@ extension CocoaViewController: ViewHierarchyComponent {
 //        builder().forEach { $0.attach(to: __buildRootView) }
 //    }
 //}
+#endif
